@@ -1,0 +1,142 @@
+package view;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
+public class PipeGameDisplayer extends Canvas{
+	
+	char[][] pipeBoard;
+	
+	char LU = '|';
+	char CLD = 'L';
+	char CLU= 'r';
+	char CRU = '7';
+	char CRD = 'J';
+	char LS = '-';
+	char Start = 's';
+	char Goal = 'g';
+	
+	int cCol,cRow;
+	int x,y;
+	
+	public PipeGameDisplayer()
+	{
+		picFileName = new SimpleStringProperty();
+		pipeg = new SimpleStringProperty();
+		cCol = 0;
+		cRow = 1; 
+	}
+	
+	
+	public char getPipe(int x, int y) {
+		return pipeBoard[x][y];
+	}
+	
+	
+	public int getcRow() {
+		return cRow;
+	}
+	
+	public int getcCol() {
+		return cCol;
+	}
+
+	public void setcPoition(int row, int col) {
+		cRow = row;
+		cCol = col;
+		redraw();
+	}
+
+	private StringProperty picFileName;
+	private StringProperty pipeg;
+	private StringProperty pipes;
+	private StringProperty pipe7;
+	private StringProperty pipeJ;
+	private StringProperty pipeL;
+	private StringProperty piper;
+	private StringProperty pipe0;
+	private StringProperty pipe1;
+	
+	public String getPipeg() {
+		return pipeg.get();
+	}
+
+
+	public void setPipeg(String pipeg) {
+		this.pipeg.set(pipeg);
+	}
+	
+	public String getPicFileName() {
+		return picFileName.get();
+	}
+
+	public void setPicFileName(String picFileName) {
+		this.picFileName.set(picFileName);
+	}
+
+
+	public char[][] getPipeBoard() {
+		return pipeBoard;
+	}
+
+	public void setPipeBoard(char[][] pipeData) {
+		this.pipeBoard = pipeData;
+		redraw();
+	}
+	
+	public void redraw()
+	{
+		if (pipeBoard != null)
+		{
+			double W = getWidth();
+			double H = getHeight();
+			double w = W / pipeBoard[0].length;
+			double h = H / pipeBoard.length;
+			
+			GraphicsContext gc = getGraphicsContext2D();
+			
+			Image picg = null;
+			Image pics = null;
+			System.out.println(picFileName.get() + pipeg.get());
+			try {
+				picg = new Image(new FileInputStream(picFileName.get()+pipeg.get()));
+				pics = new Image(new FileInputStream(picFileName.get()+pipes.get()));
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				
+			System.out.println(picFileName.get());
+			
+			gc.clearRect(0, 0, W, H);
+			
+			for (int i = 0; i < pipeBoard.length ; i++ )
+			{
+				for ( int j = 0 ; j < pipeBoard[i].length; j++)
+				{
+					if (pipeBoard[i][j] != 0)
+					{
+						if (picg == null)
+						{
+							gc.fillRect(w*j, h*i, w, h);
+						}
+						else
+						{
+							gc.drawImage(picg, w*j, h*i, w, h); 
+						}
+					}
+				}
+			}
+			gc.setFill(Color.RED);
+			gc.fillOval(cCol*w, cRow*h, w/2, h/2);
+			
+		}
+	}
+}

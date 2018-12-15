@@ -1,0 +1,19 @@
+package view;
+
+public class MainWindowController {
+	
+	
+	public void openFile()
+	{
+		FileChooser fc = new FileChooser();
+		
+		fc.setTitle("choose file");
+		fc.setInitialDirectory(new File("./reasources"));
+
+		File chosen = fc.showOpenDialog(null);
+		if (chosen != null)
+		{
+			System.out.println(chosen.getName());
+		}
+		
+}
